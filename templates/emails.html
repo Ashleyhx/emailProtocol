@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emails</title>
+</head>
+<body>
+    <h1>Emails</h1>
+    {% for email in emails %}
+        <div>
+            <h2>From: {{ email.from }}</h2>
+            <h3>Subject: {{ email.subject }}</h3>
+            <p>{{ email.body }}</p>
+        </div>
+    {% endfor %}
+    <a href="/">Back to Home</a>
+</body>
+</html>
+
