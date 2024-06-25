@@ -62,10 +62,21 @@ def parse_single_email(msg):
     body = ''
     if msg.is_multipart():
         for part in msg.walk():
+            charset = part.get_content_charset()
             if part.get_content_type() == 'text/plain':
-                body = part.get_payload(decode=True).decode()
+                payload = part.get_payload(decode=True)
+                try:
+                    body = payload.decode(charset if charset else 'utf-8', errors='replace')
+                except LookupError:  # charset is not recognized
+                    body = payload.decode('utf-8', errors='replace')
                 break
     else:
-        body = msg.get_payload(decode=True).decode()
+        charset = msg.get_content_charset()
+        payload = msg.get_payload(decode=True)
+        try:
+            body = payload.decode(charset if charset else 'utf-8', errors='replace')
+        except LookupError:
+            body = payload.decode('utf-8', errors='replace')
 
     return {'from': From, 'subject': subject, 'body': body}
+
